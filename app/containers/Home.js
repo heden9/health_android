@@ -30,8 +30,8 @@ class Home extends Component {
         style={[styles.icon, { tintColor: focused ? tintColor : 'gray' }]}
         source={require('../images/house.png')}
       />,
-  }
-  static tabs = time(new Date())
+  };
+  static tabs = time(new Date());
   componentDidMount() {
     this.props.navigation.setParams({
       headerTitle: this.props.headerTitle,
@@ -39,7 +39,7 @@ class Home extends Component {
   }
   gotoDetail = () => {
     this.props.dispatch(NavigationActions.navigate({ routeName: 'Detail' }));
-  }
+  };
   render() {
     return (
       <View style={styles.container}>

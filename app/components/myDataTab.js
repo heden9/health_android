@@ -43,7 +43,7 @@ export default class MyTab extends React.PureComponent {
   state = {
     activeTab: this.props.now,
     contentTabArrs: [],
-  }
+  };
   componentWillMount() {
     this.loadMessage(this.props.now);
   }

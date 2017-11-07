@@ -4074,6 +4074,10 @@ react-native-menu@^0.23.0:
     prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
 
+react-native-splash-screen@^3.0.6:
+  version "3.0.6"
+  resolved "http://registry.npm.taobao.org/react-native-splash-screen/download/react-native-splash-screen-3.0.6.tgz#c0bbf2c8ae40a313c4c7044f55e569414ff68332"
+
 react-native-swipeout@^2.2.2:
   version "2.3.1"
   resolved "http://registry.npm.taobao.org/react-native-swipeout/download/react-native-swipeout-2.3.1.tgz#f33e852b46d2cddb878a431a1c696428e3d9d2a5"

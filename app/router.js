@@ -8,7 +8,6 @@ import {
   NavigationActions,
 } from 'react-navigation';
 import { connect } from 'react-redux';
-
 import Login from './containers/Login';
 import Home from './containers/Home';
 import Account from './containers/Account';

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import { StyleSheet, View, Image } from 'react-native';
 import { Button } from 'antd-mobile';
 import { connect } from 'react-redux';
@@ -33,6 +34,7 @@ class Home extends Component {
   };
   static tabs = time(new Date());
   componentDidMount() {
+    SplashScreen.hide();
     this.props.navigation.setParams({
       headerTitle: this.props.headerTitle,
     });

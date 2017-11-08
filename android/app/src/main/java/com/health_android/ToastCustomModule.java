@@ -1,12 +1,18 @@
 package com.health_android;
 
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 
 import java.util.HashMap;
@@ -19,6 +25,7 @@ import java.util.Map;
 public class ToastCustomModule extends ReactContextBaseJavaModule {
     private static final String DURATION_SHORT="SHORT";
     private static final String DURATION_LONG="LONG";
+    private static int steps;
     public ToastCustomModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
@@ -37,7 +44,9 @@ public class ToastCustomModule extends ReactContextBaseJavaModule {
     public void show(String message, int duration) {
         Toast.makeText(getReactApplicationContext(), message, duration).show();
     }
-
+    public static void setSteps(int steps){
+        ToastCustomModule.steps = steps;
+    }
     /**
      * 使用回调函数，传值
      * @param successCallback
@@ -58,11 +67,23 @@ public class ToastCustomModule extends ReactContextBaseJavaModule {
      * @param promise
      */
     @ReactMethod
-    public void measureLayoutPromise(int a1, Promise promise){
+    public void sendStepsMsg(int a1, Promise promise){
         try{
             promise.resolve(a1*2);
         } catch (IllegalViewOperationException e){
             promise.reject(e);
         }
     }
+
+    public void onHandleResult(int barcodeData) {
+        WritableMap params = Arguments.createMap();
+        params.putString("result", String.valueOf(barcodeData));
+        sendEvent(getReactApplicationContext(), "onScanningResult", params);
+    }
+
+    private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, DeviceEventEmitter } from 'react-native';
 import { Button } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { NavigationActions } from '../utils';
@@ -38,6 +38,10 @@ class Home extends Component {
     this.props.navigation.setParams({
       headerTitle: this.props.headerTitle,
     });
+    DeviceEventEmitter.addListener('logInConsole',this.onScanningResult);
+  }
+  onScanningResult = (e)=> {
+    console.log(e);
   }
   gotoDetail = () => {
     this.props.dispatch(NavigationActions.navigate({ routeName: 'Detail' }));

@@ -23,6 +23,11 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -348,7 +353,6 @@ public class StepService extends Service implements SensorEventListener {
 
             stepDataDao.updateCurData(entity);
         }
-
         builder.setContentIntent(PendingIntent.getActivity(this, 0, nfIntent, 0)) // 设置PendingIntent
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher)) // 设置下拉列表中的图标(大图标)
                 .setContentTitle("今日步数"+CURRENT_STEP+"步") // 设置下拉列表里的标题
@@ -360,7 +364,6 @@ public class StepService extends Service implements SensorEventListener {
         //调用更新
         notificationManager.notify(110,stepNotification);
     }
-
 
     @Override
     public void onDestroy() {

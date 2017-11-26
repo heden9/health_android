@@ -15,6 +15,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.devio.rn.splashscreen.SplashScreen;
 
@@ -23,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends ReactActivity implements android.os.Handler.Callback{
 
@@ -66,9 +72,9 @@ public class MainActivity extends ReactActivity implements android.os.Handler.Ca
             getRecordList();
             setDatas();
             setupService();
-            Toast.makeText(MainActivity.this, "ok", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "ok，已开启计步服务", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(MainActivity.this, "sorry", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "sorry，您的设备不支持计步", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -120,6 +126,7 @@ public class MainActivity extends ReactActivity implements android.os.Handler.Ca
                         Message msg = Message.obtain(null, Constant.MSG_FROM_CLIENT);
                         msg.replyTo = mGetReplyMessenger;
                         messenger.send(msg);
+                        setDatas();
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -148,11 +155,12 @@ public class MainActivity extends ReactActivity implements android.os.Handler.Ca
      */
     private void setDatas() {
         StepEntity stepEntity = stepDataDao.getCurDataByDate(curSelDate);
-
         if (stepEntity != null) {
             int steps = Integer.parseInt(stepEntity.getSteps());
             Log.d("Main", String.valueOf(steps));
-
+            WritableMap map = Arguments.createMap();
+            map.putInt("count", steps);
+            sendEvent("step", map);
         } else {
         }
 
@@ -212,5 +220,17 @@ public class MainActivity extends ReactActivity implements android.os.Handler.Ca
         //记得解绑Service，不然多次绑定Service会异常
         if (isBind) this.unbindService(conn);
     }
+    static public ReactContext mainreactContext;
+    private Boolean ad = true;
+    public void sendEvent(String eventName, @Nullable WritableMap params) {
 
+        if (mainreactContext==null) {
+            Log.d("event", "mainreactContext==null");
+        }else{
+            Log.d("event","sendADEvent:"+params.toString());
+            mainreactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(eventName, params);
+        }
+    }
 }

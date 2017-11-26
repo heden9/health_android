@@ -5,6 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  Platform,
+  UIManager,
+  LayoutAnimation,
   TouchableWithoutFeedback,
 } from 'react-native';
 import { chunk } from 'lodash';
@@ -12,11 +15,23 @@ import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
 const { width } = Dimensions.get('window');
+const CustomLayoutAnimation = {
+  duration: 400,
+  create: {
+    type: LayoutAnimation.Types.spring,
+    property: LayoutAnimation.Properties.opacity,
+  },
+  update: {
+    type: LayoutAnimation.Types.spring,
+    property: LayoutAnimation.Properties.opacity,
+  },
+
+};
 export default class MyTab extends React.PureComponent {
   constructor(...arg) {
     super(...arg);
     this.map = new Map();
-    this.props.tabs.forEach(item => {
+    this.props.tabs.forEach((item, index) => {
       this.map.set(item, [
         {
           title: '跑步 + 步行距离',
@@ -27,7 +42,7 @@ export default class MyTab extends React.PureComponent {
         {
           title: '步数',
           time: '19:58',
-          number: 11561,
+          number: this.props.now === index ? this.props.nowStep : 10000,
           unit: '步',
         },
         {
@@ -38,7 +53,6 @@ export default class MyTab extends React.PureComponent {
         },
       ]);
     });
-    console.log(this.map);
   }
   state = {
     activeTab: this.props.now,
@@ -46,6 +60,35 @@ export default class MyTab extends React.PureComponent {
   };
   componentWillMount() {
     this.loadMessage(this.props.now);
+    // if (Platform.OS === 'android') {
+    //   UIManager.setLayoutAnimationEnabledExperimental(true)
+    // }
+    // LayoutAnimation.configureNext(CustomLayoutAnimation);
+  }
+  componentWillReceiveProps({ now, tabs, nowStep }){
+    if(this.flag){
+      return;
+    }
+    this.map.set(tabs[now], [
+      {
+        title: '跑步 + 步行距离',
+        time: moment(tabs[now]).format('D'),
+        number: 7.3,
+        unit: '公里',
+      },
+      {
+        title: '步数',
+        time: '19:58',
+        number: nowStep,
+        unit: '步',
+      },
+      {
+        title: '已爬楼层',
+        time: '19:57',
+        number: 21,
+        unit: '层',
+      }
+    ]);
   }
   componentDidMount() {
     setTimeout(() => {
@@ -64,7 +107,6 @@ export default class MyTab extends React.PureComponent {
   };
   newPressHandle = index => {
     const { activeTab } = this.state;
-    console.log(activeTab);
     if (index > activeTab) {
       this.contentView.scrollTo({ x: 0, y: 0, animated: false });
     } else if (index < activeTab) {
@@ -93,7 +135,6 @@ export default class MyTab extends React.PureComponent {
     } else {
       tmp.push(null);
     }
-    console.log(tmp);
     this.setState({
       contentTabArrs: tmp,
     });
@@ -112,18 +153,19 @@ export default class MyTab extends React.PureComponent {
   animatedEnd = e => {
     const offsetX = e.nativeEvent.contentOffset.x;
     const result = Math.round(offsetX / width);
-    console.log('滑动为', width, offsetX, result);
     if (result === 0) {
       this.onPressHandle(this.state.activeTab - 1);
     } else if (result === this.state.contentTabArrs.length - 1) {
       this.onPressHandle(this.state.activeTab + 1);
     }
+    this.flag = false;
   };
   scrollTabBar = activeTab => {
     const result = parseInt(activeTab / 7);
     this.ScrollView.scrollTo({ x: result * width, y: 0, animated: true });
   };
   animatedStart = (...arg) => {
+    this.flag = true;
     console.log('start', arg);
   };
   renderTabBar = tabs => {
@@ -181,9 +223,10 @@ export default class MyTab extends React.PureComponent {
             ref={ref => {
               this.contentView = ref;
             }}
-            onMomentumScrollEnd={this.animatedEnd}
-            onMomentumScrollStart={this.animatedStart}
-            scrollEventThrottle={300}
+            scrollEnabled={false}
+            // onMomentumScrollEnd={this.animatedEnd}
+            // onMomentumScrollStart={this.animatedStart}
+            scrollEventThrottle={50}
             style={[style.contentContainer, { width }]}
             horizontal
           >

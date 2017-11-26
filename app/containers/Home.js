@@ -25,23 +25,28 @@ class Home extends Component {
       color: pink,
       fontWeight: '300',
     },
-    tabBarLabel: 'Home',
+    tabBarLabel: '健康',
     tabBarIcon: ({ focused, tintColor }) =>
       <Image
         style={[styles.icon, { tintColor: focused ? tintColor : 'gray' }]}
-        source={require('../images/house.png')}
+        source={require('../images/health.png')}
       />,
   };
   static tabs = time(new Date());
+  state = {
+    count: 0,
+  };
   componentDidMount() {
     SplashScreen.hide();
     this.props.navigation.setParams({
       headerTitle: this.props.headerTitle,
     });
-    DeviceEventEmitter.addListener('logInConsole',this.onScanningResult);
+    DeviceEventEmitter.addListener('step',this.onScanningResult);
   }
-  onScanningResult = (e)=> {
-    console.log(e);
+  onScanningResult = ({ count })=> {
+    this.setState({
+      count,
+    });
   }
   gotoDetail = () => {
     this.props.dispatch(NavigationActions.navigate({ routeName: 'Detail' }));
@@ -49,7 +54,7 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <MyTab {...Home.tabs} />
+        <MyTab {...Home.tabs} nowStep={this.state.count} />
         <Button onClick={this.gotoDetail}>Goto Detail</Button>
       </View>
     );

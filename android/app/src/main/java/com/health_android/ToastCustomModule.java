@@ -28,6 +28,7 @@ public class ToastCustomModule extends ReactContextBaseJavaModule {
     private static int steps;
     public ToastCustomModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        MainActivity.mainreactContext = reactContext;
     }
     @Override
     public Map<String, Object> getConstants() {
@@ -69,21 +70,10 @@ public class ToastCustomModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void sendStepsMsg(int a1, Promise promise){
         try{
-            promise.resolve(a1*2);
+            promise.resolve(steps);
         } catch (IllegalViewOperationException e){
             promise.reject(e);
         }
-    }
-
-    public void onHandleResult(int barcodeData) {
-        WritableMap params = Arguments.createMap();
-        params.putString("result", String.valueOf(barcodeData));
-        sendEvent(getReactApplicationContext(), "onScanningResult", params);
-    }
-
-    private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(eventName, params);
     }
 
 }

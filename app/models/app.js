@@ -20,6 +20,9 @@ export default {
     saveHeaderTitle(state, { payload: { headerTitle } }) {
       return { ...state, headerTitle };
     },
+    saveCount(state, { payload: { count }}) {
+      
+    }
   },
   effects: {
     *login({ payload }, { call, put }) {

@@ -24,6 +24,9 @@ const HomeNavigator = TabNavigator(
     swipeEnabled: false,
     animationEnabled: false,
     lazyLoad: true,
+    tabBarOptions: {
+      activeTintColor:'rgb(252,49,86)'
+    },
   }
 );
 

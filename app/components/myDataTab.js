@@ -36,7 +36,7 @@ export default class MyTab extends React.PureComponent {
         {
           title: '跑步 + 步行距离',
           time: moment(item).format('D'),
-          number: 7.3,
+          number: 0.1,
           unit: '公里',
         },
         {
@@ -48,7 +48,7 @@ export default class MyTab extends React.PureComponent {
         {
           title: '已爬楼层',
           time: '19:57',
-          number: 21,
+          number: 3,
           unit: '层',
         },
       ]);
@@ -73,7 +73,7 @@ export default class MyTab extends React.PureComponent {
       {
         title: '跑步 + 步行距离',
         time: moment(tabs[now]).format('D'),
-        number: 7.3,
+        number: 0.1,
         unit: '公里',
       },
       {
@@ -85,7 +85,7 @@ export default class MyTab extends React.PureComponent {
       {
         title: '已爬楼层',
         time: '19:57',
-        number: 21,
+        number: 3,
         unit: '层',
       }
     ]);
